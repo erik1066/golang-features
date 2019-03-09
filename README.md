@@ -1,5 +1,7 @@
 # Go Language Features
 
+[Go by Example](https://gobyexample.com/) is an excellent syntax reference. If you're new to Go, check out the free online book _[An Introduction to Programming in Go](http://www.golang-book.com/books/intro)_. 
+
 See [Pop!_OS setup guide](https://github.com/erik1066/pop-os-setup) for instructions on installing Go on Ubuntu 18.04.
 
 Example "Hello, World!" application in GoLang:
@@ -44,6 +46,8 @@ There are a few advanced types:
 
 ## Variable Assignments
 
+[Example code](src/variables/variables.go)
+
 Go has three methods for declaring and/or assigning variables. The first is to declare a variable using `var`, provide a variable name, define the type, an assignment operator, and then optionally the value you want to assign after the operator. For example:
 
 ```go
@@ -77,6 +81,8 @@ var a, b, c = 1, 2, 3
 
 ## Pointers
 
+[Example code](src/pointers/pointers.go)
+
 Pointers are declared using the `*` operator and dereferenced using the `&` operator.
 
 ```go
@@ -99,6 +105,8 @@ func main() {
 ```
 
 ## User-defined types
+
+[Example code](src/user-defined-types/user-defined-types.go)
 
 Go has no concept of classes. Instead, class-like "structures" are created using the `type` keyword with the `struct` type:
 
@@ -142,9 +150,95 @@ fmt.Println(maria) // prints "{Maria 65}"
 
 ## Constants
 
+[Example code](src/constants/constants.go)
+
 ```go
 const (
     Version = 1
     OS      = "Ubuntu 18.04"
 )
 ```
+
+## Loops
+
+[Example code](src/loops/loops.go)
+
+There's only one loop syntax in Go: `for`. There is no `do`, `while`, or `foreach`. The `for` syntax can take several forms:
+
+```go
+// traditional for loop
+for initialization; condition; after {
+    // statements
+}
+
+// equivalent to a while loop
+for condition {
+    // statements
+}
+
+// equivalent to an infinite loop
+for {
+    // statements
+}
+```
+
+Example of the the traditional `for`:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	names := [3]string{"John", "Mary", "Susan"} // creates an array
+
+	for i := 0; i < len(names); i++ {
+		fmt.Println(names[i])
+	}
+}
+```
+
+Loops in Go can be terminated using `break` or `return`.
+
+## Ranges
+
+[Example code](src/ranges/ranges.go)
+
+A subset of a collection can be obtained using the range sytnax `[start..end]`. For example, the loop below prints just the Canadian city names "Toronto" and "Victoria":
+
+```go
+places := make([]string, 6) // create a slice
+places[0] = "New York City"
+places[1] = "Los Angeles"
+places[2] = "Chicago"
+places[3] = "Toronto"
+places[4] = "Victoria"
+places[5] = "Seattle"
+
+canadianPlaces := places[3:5]
+
+for i := 0; i < len(canadianPlaces); i++ {
+    fmt.Println(canadianPlaces[i])
+}
+```
+
+We can also just print the big U.S. cities in the list by using special `for` syntax as shown below. Notice the abscence of the starting value for the range. Leaving the start value unspecified is shorthand for "start at the beginning".
+
+```go
+for i, place := range places[:3] {
+    fmt.Println(i+1, place)
+}
+```
+
+In the above example, `i` is the index value and `place` is the value of the slice at that index. Both variables can then be used in the loop body.
+
+A problem arises when we do not need to use `i` in the loop body: Go will refuse to compile our code if there is an unused variable. In those situations we can use the `_` operator in place of `i` to avoid a compile-time error:
+
+```go
+otherPlaces := places[5:]
+for _, place := range otherPlaces {
+    fmt.Println(place)
+}
+```
+
+Leaving the end value of the rage unspecified, as shown above, is shorthand for "take all the remaining elements".
