@@ -242,3 +242,98 @@ for _, place := range otherPlaces {
 ```
 
 Leaving the end value of the rage unspecified, as shown above, is shorthand for "take all the remaining elements".
+
+## Variadic functions
+
+[Example code](src/variadic-functions/variadic-functions.go)
+
+A "variadic function" is one that accepts a variable number of parameters of a specific type. Use the `...` operator to specify that a method parameter is variadic:
+
+```go
+func Greeting(name string, messages ...string) {
+	for _, message := range messages {
+		fmt.Println(message, name)
+	}
+}
+
+func main() {
+	Greeting("Andy", "Hello", "Greetings", "Salutations")
+}
+```
+
+Output:
+
+```
+Hello Andy
+Greetings Andy
+Salutations Andy
+```
+
+## Multiple return values
+
+[Example code](src/multiple-return-values/multiple-return-values.go)
+
+Go can return multiple named values from a function:
+
+```go
+func CreateGreeting(name string) (primary string, alternate string) {
+	primary = "Hello, " + name
+	alternate = "Greetings, " + name
+	return
+}
+
+func main() {
+	greeting, alternate := CreateGreeting("Andy")
+	fmt.Println(greeting)
+	fmt.Println(alternate)
+}
+```
+
+Output:
+
+```
+Hello, Andy
+Greetings, Andy
+```
+
+In the above example, `primary` and `alternate` are the named return values. Observe that they're wrapped in parenthesis after the method signature and before the opening brace.
+
+## Passing functions to functions
+
+[Example code](src/passing-a-function/passing-a-function.go)
+
+Go allows passing a function to another function. Passing functions is a matter of declaring the function-to-be-passed in the receiving function's signature. We can see this in the example below where how the `generator` parameter is declared as a function that accepts a `string` and returns a `string`. We can then supply any function that meets those requirements to `CreateGreeting`.
+
+```go
+package main
+
+import "fmt"
+
+func CreateGreeting(name string, generator func(string) string) string {
+	greeting := generator(name)
+	return greeting
+}
+
+func CreateGreeting1(name string) string {
+	return "Greetings, " + name + "!"
+}
+
+func CreateGreeting2(name string) string {
+	return "Hello, " + name
+}
+
+func main() {
+	greeting1 := CreateGreeting("Andy", CreateGreeting1)
+	fmt.Println(greeting1)
+
+	greeting2 := CreateGreeting("Andy", CreateGreeting2)
+	fmt.Println(greeting2)
+}
+```
+
+Output:
+
+```
+Greetings, Andy!
+Hello, Andy
+```
