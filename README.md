@@ -378,3 +378,58 @@ func main() {
 	fmt.Println(person.name) // prints "Dinah"
 }
 ```
+
+## Interfaces
+
+[Example code](src/interfaces/interfaces.go)
+
+Any type that has the same methods as an interface implements that interface. We can then use that type anywhere that interface is required.
+
+In the example below, the interface `transformer` is defined as having a method called `transform` that outputs a string. Both `reverser` and `uppercaser` implement the `transformer` interface by conversion, since they each have a method that meets the interface definition. We can then use an instance of either `reverser` or `uppercaser` as an argument to the `transformData` function, which expects an interface.
+
+```go
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+type uppercaser struct {
+	data string
+}
+
+type reverser struct {
+	data string
+}
+
+type transformer interface {
+	transform() string
+}
+
+func (t reverser) transform() string {
+	runes := []rune(t.data)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
+func (t uppercaser) transform() string {
+	var upper = strings.ToUpper(t.data)
+	return upper
+}
+
+func transformData(t transformer) {
+	fmt.Println(t.transform())
+}
+
+func main() {
+	var reverser = reverser{data: "John"}
+	var uppercaser = uppercaser{data: "Dinah"}
+
+	transformData(reverser) // outputs "nhoJ"
+	transformData(uppercaser) // outputs "DINAH"
+}
+```
+
