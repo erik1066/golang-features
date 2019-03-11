@@ -337,3 +337,44 @@ Output:
 Greetings, Andy!
 Hello, Andy
 ```
+
+## Methods
+
+[Example code](src/methods/methods.go)
+
+Methods operate on defined `struct` types. They are implemented by specifying the type in parenthesis prior to the name of the method. For example:
+
+```go
+type Person struct {
+	name    string
+}
+
+func (person Person) Greet() {
+	fmt.Println("Hello, " + person.name)
+}
+
+func main() {
+	person := Person{"John"}
+	person.Greet()
+}
+```
+
+Observe that `Greet()` is called on an instance of `Person` using the `.` operator. `Greet()` also has `(person Person)` prior to the method name, specifying that this method only operates on `Person`.
+
+However, the `Greet()` method will not be able to modify any values on the `person` instance that was passed to it, as `person` was passed by value and not by reference. To modify the instance being operated on we can use a pointer:
+
+```go
+type Person struct {
+	name    string
+}
+
+func (person *Person) SetName(name string) {
+	person.name = name
+}
+
+func main() {
+	person := Person{"John"}
+	person.SetName("Dinah")
+	fmt.Println(person.name) // prints "Dinah"
+}
+```
